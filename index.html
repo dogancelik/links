@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html ng-app="App">
+<head>
+  <title>Links</title>
+  <meta charset="UTF-8">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha256-k2/8zcNbxVIh5mnQ52A0r3a6jAgMGxFJFE2707UxGCk= sha512-ZV9KawG2Legkwp3nAlxLIVFudTauWuBpC10uEafMHYL0Sarrz5A7G79kXh5+5+woxQ5HM559XX2UZjMJ36Wplg==" crossorigin="anonymous">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="./index.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+</head>
+<body>
+  <div class="container">
+
+    <nav class="navbar navbar-default">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="."><i class="fa fa-link"></i> Links</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="navbar-collapse">
+        <form class="navbar-form navbar-left" role="search">
+          <button class="btn btn-default" type="button" data-toggle="modal" data-target="#settingsModal"><i class="fa fa-cogs"></i> Settings</a></button>
+        </form>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a id="donate" href="http://dogancelik.com/donate.html"><i class="fa fa-heart"></i> Donate</a></li>
+          <li><a href="https://github.com/dogancelik/links"><i class="fa fa-github"></i> Github</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="row">
+      <div class="col-md-12">
+        <form>
+          <input id="typeahead" class="form-control input-lg" type="text" placeholder="Search for links">
+        </form>
+      </div>
+    </div>
+
+    <div id="settingsModal" tabindex="-1" role="dialog" ng-controller="SettingsCtrl" class="modal fade">
+      <div role="document" class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close"><span>×</span></button>
+            <h4 class="modal-title">Settings</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Source URLs</label>
+              <textarea class="form-control" ng-model="settings.url"></textarea>
+            </div>
+            <div class="form-group">
+              <a class="sources" href="https://github.com/dogancelik/links/wiki/Sources" target="_blank">List of sources</a>
+            </div>
+            <div class="form-group">
+              <label>Open files in</label>
+              <select class="form-control" ng-model="settings.openFile">
+                <option value="new">New tab</option>
+                <option value="current">Current tab</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Open pages in</label>
+              <select class="form-control" ng-model="settings.openPage">
+                <option value="new">New tab</option>
+                <option value="current">Current tab</option>
+              </select>
+            </div>
+            <div class="text-right">
+              <button class="btn btn-default" ng-click="reset()">Reset Settings</button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/ngstorage/0.3.6/ngStorage.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.4.3/js-yaml.min.js"></script>
+  <script type="text/javascript" src="./index.js"></script>
+</body>
+</html>

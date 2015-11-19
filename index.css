@@ -1,0 +1,70 @@
+/* Typeahead */
+.tt-input {
+  font-size: 27px;
+  padding: 15px 24px;
+  height: 69px;
+}
+
+.twitter-typeahead {
+  width: 100%;
+  display: block !important;
+}
+
+.tt-menu {
+  width: 100%;
+  margin-top: 4px;
+  padding: 4px 0;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 15px 20px;
+  line-height: 24px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.tt-suggestion.tt-cursor,.tt-suggestion:hover {
+  color: #fff;
+  background-color: #0097cf;
+}
+
+.tt-suggestion .obj {
+  position: relative;
+}
+
+.tt-suggestion .name {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.tt-suggestion .url {
+  font-size: 12px;
+}
+
+.tt-suggestion .tags {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+}
+
+/* Main */
+@keyframes heart {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); text-shadow: 0 0 2px #FF002B; color: #FF002B; }
+  100% { transform: scale(1); }
+}
+
+#donate {
+  color: #DE0429;
+}
+
+#donate:hover i {
+  animation: heart .7s;
+  animation-iteration-count: 2;
+}
