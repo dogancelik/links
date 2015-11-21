@@ -141,8 +141,8 @@ angular
 })
 .factory('Settings', function ($localStorage) {
   var urls = [
-    'https://links-js.github.io/links-db/db-global.yml',
-    'https://links-js.github.io/links-db/db-' + getOs() + '.yml'
+    '/links-db/db-global.yml',
+    '/links-db/db-' + getOs() + '.yml'
   ].join('\n');
 
   var storageDefault = {
