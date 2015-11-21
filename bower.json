@@ -1,0 +1,25 @@
+{
+  "name": "links",
+  "description": "",
+  "main": "index.js",
+  "authors": "Doğan Çelik",
+  "license": "MIT",
+  "homepage": "https://github.com/links-js/links",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-cache": "~4.4.2",
+    "bootstrap": "~3.3.5",
+    "js-yaml": "~3.4.3",
+    "ngstorage": "~0.3.10",
+    "typeahead.js": "~0.11.1",
+    "angular": "~1.4.8",
+    "font-awesome": "~4.4.0"
+  }
+}
