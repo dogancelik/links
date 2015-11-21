@@ -87,45 +87,8 @@ function startTypeahead (links) {
 }
 
 angular
-.module('App', ['ngStorage'])
-.factory('Settings', function ($localStorage) {
-  var urls = [
-    'https://links-js.github.io/links-db/db-global.yml',
-    'https://links-js.github.io/links-db/db-' + getOs() + '.yml'
-  ].join('\n');
-
-  var storageDefault = {
-    url: urls,
-    openFile: 'current',
-    openPage: 'new'
-  };
-
-  return {
-    reset: function () { return $localStorage.$reset(storageDefault); },
-    storage: $localStorage.$default(storageDefault)
-  };
-})
-.controller('SettingsCtrl', function ($scope, $rootScope, Settings) {
-  $scope.reset = function () {
-    Settings.reset();
-  };
-})
-.filter('noReferrer', function () {
-  return function (input) {
-    return 'https://href.li/?' + input;
-  };
-})
-.filter('getFaviconUrl', function () {
-  return function (input) {
-    return 'https://www.google.com/s2/favicons?domain_url=' + input;
-  };
-})
-.run(function ($http, $q, $rootScope, Settings) {
-  $rootScope.settings = Settings.storage;
-
-  var urls = $rootScope.settings.url.split('\n');
-  var promises = urls.map(function (url) { return $http.get(url); });
-
+.module('App', ['ngStorage', 'angular-cache'])
+.factory('Typeahead', function ($http, $rootScope, $q) {
   function getData (response) {
     var url = response.config.url;
     var data = null;
@@ -160,12 +123,66 @@ angular
     return objArray;
   }
 
-  $q
-    .all(promises)
-    .then(mapResponses)
-    .then(combineObjects)
-    .then(function (arr) {
-      var allLinks = arr.slice(-1)[0];
-      startTypeahead(allLinks);
+  return {
+    load: function () {
+      var urls = $rootScope.settings.url.split('\n');
+      var promises = urls.map(function (url) { return $http.get(url); });
+
+      $q
+        .all(promises)
+        .then(mapResponses)
+        .then(combineObjects)
+        .then(function (arr) {
+          var allLinks = arr.slice(-1)[0];
+          startTypeahead(allLinks);
+        });
+    }
+  };
+})
+.factory('Settings', function ($localStorage) {
+  var urls = [
+    'https://links-js.github.io/links-db/db-global.yml',
+    'https://links-js.github.io/links-db/db-' + getOs() + '.yml'
+  ].join('\n');
+
+  var storageDefault = {
+    url: urls,
+    openFile: 'current',
+    openPage: 'new',
+    cache: true
+  };
+
+  return {
+    reset: function () { return $localStorage.$reset(storageDefault); },
+    storage: $localStorage.$default(storageDefault)
+  };
+})
+.controller('SettingsCtrl', function ($scope, $rootScope, Settings) {
+  $scope.reset = function () {
+    Settings.reset();
+  };
+})
+.filter('noReferrer', function () {
+  return function (input) {
+    return 'https://href.li/?' + input;
+  };
+})
+.filter('getFaviconUrl', function () {
+  return function (input) {
+    return 'https://www.google.com/s2/favicons?domain_url=' + input;
+  };
+})
+.run(function ($http, $rootScope, Settings, Typeahead, CacheFactory) {
+  $rootScope.settings = Settings.storage;
+
+  if ($rootScope.settings.cache === true) {
+    $http.defaults.cache = CacheFactory('defaultCache', {
+      maxAge: 15 * 60 * 1000,
+      cacheFlushInterval: 60 * 60 * 1000,
+      deleteOnExpire: 'aggressive',
+      storageMode: 'localStorage'
     });
+  }
+
+  Typeahead.load();
 });
