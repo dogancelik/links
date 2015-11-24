@@ -68,10 +68,12 @@ function startTypeahead (links) {
     limit: 10,
     templates: {
       suggestion: function (obj) {
+        tags = obj.tags.map(function (i) { return '#' + i; }).join(' ');
+
         return '<div><div class="obj">' +
           '<span class="name">' + obj.name + '</span>' +
           '<br><span class="url">' + obj._url + '</span>' +
-          '<span class="tags">' + obj.tags.map((i)=>'#'+i).join(' ') + '</span>' +
+          '<span class="tags">' + tags + '</span>' +
           '</div></div>';
       }
     },
