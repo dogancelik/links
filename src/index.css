@@ -68,3 +68,11 @@
   animation: heart .7s;
   animation-iteration-count: 2;
 }
+
+#browserstack {
+  color: #FF7700;
+}
+
+#browserstack:hover {
+  color: #FF5500;
+}
