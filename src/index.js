@@ -1,19 +1,9 @@
 function getOs() {
   var platform = navigator.platform.toUpperCase();
-  switch (platform) {
-    case 'MAC':
-      return 'mac';
-      break;
-    case 'WIN':
-      return 'windows';
-      break;
-    case 'LINUX':
-      return 'linux';
-      break;
-    default:
-      return 'windows';
-      break;
-  }
+  if (platform.indexOf('MAC') > -1) return 'mac';
+  if (platform.indexOf('WIN') > -1) return 'windows';
+  if (platform.indexOf('LINUX') > -1) return 'linux';
+  return 'windows';
 }
 
 function isYaml (str) {
