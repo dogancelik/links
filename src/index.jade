@@ -1,0 +1,111 @@
+doctype html
+html(ng-app='App')
+  head
+    title Links
+    meta(charset='UTF-8')
+    link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css', rel='stylesheet', integrity='sha256-k2/8zcNbxVIh5mnQ52A0r3a6jAgMGxFJFE2707UxGCk= sha512-ZV9KawG2Legkwp3nAlxLIVFudTauWuBpC10uEafMHYL0Sarrz5A7G79kXh5+5+woxQ5HM559XX2UZjMJ36Wplg==', crossorigin='anonymous')
+    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css', rel='stylesheet', integrity='sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==', crossorigin='anonymous')
+    link(rel='stylesheet', type='text/css', href='index.css')
+    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js')
+  body
+    .container
+      nav.navbar.navbar-default
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='.')
+            i.fa.fa-link
+            | &nbsp;Links
+        #navbar-collapse.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li: a(href='/#/') Home
+            li: a(href='/#/list') List
+            li: a(href='/#/tags') Tags
+          form.navbar-form.navbar-left(role='search')
+            button.btn.btn-default(type='button', data-toggle='modal', data-target='#settingsModal')
+              i.fa.fa-cogs
+              | &nbsp;Settings
+          ul.nav.navbar-nav.navbar-right
+            li: a#browserstack(href='http://www.browserstack.com/')
+              i.fa.fa-star
+              | &nbsp;BrowserStack
+            li: a#donate(href='http://dogancelik.com/donate.html')
+              i.fa.fa-heart
+              | &nbsp;Donate
+            li: a(href='https://github.com/links-js/links')
+              i.fa.fa-github
+              | &nbsp;Github
+
+      div(ng-view='ng-view')
+
+      #settingsModal.modal.fade(tabindex='-1', role='dialog', ng-controller='SettingsCtrl')
+        .modal-dialog(role='document')
+          .modal-content
+            .modal-header
+              button.close(type='button', data-dismiss='modal')
+                span ×
+              h4.modal-title Settings
+            .modal-body
+              .form-group
+                label Source URLs
+                textarea.form-control(ng-model='settings.url')
+              .form-group
+                button.btn.btn-default(ng-class="{active: settings.cache, 'btn-success': settings.cache}", ng-click='settings.cache = !settings.cache') Activate Cache
+              .form-group
+                a.sources(href='https://github.com/links-js/links/wiki/Sources', target='_blank') List of sources
+              .form-group
+                label Open files in
+                select.form-control(ng-model='settings.openFile')
+                  option(value='new') New tab
+                  option(value='current') Current tab
+              .form-group
+                label Open pages in
+                select.form-control(ng-model='settings.openPage')
+                  option(value='new') New tab
+                  option(value='current') Current tab
+              .text-right
+                button.btn.btn-default(ng-click='reset()') Reset Settings
+            .modal-footer
+              button.btn.btn-default(type='button', data-dismiss='modal') Close
+
+    script(type='text/ng-template', id='typeahead.html')
+      .row
+        .col-md-12
+          form
+            input#typeahead.my-typeahead.form-control.input-lg(type='text', placeholder='Search for links')
+
+    script(type='text/ng-template', id='list.html')
+      .row
+        .col-md-12
+          form
+            .form-group
+              input.form-control.input-lg(type='text', placeholder='Search for links', ng-model='term', ng-change='start=true')
+
+          .panel.panel-default(ng-repeat='link in loadedLinks | filter:term | limitTo: 20', ng-if='term != ""')
+            .panel-heading
+              span.panel-title
+                span.label.label-default {{ $index+1 }}
+                | &nbsp;{{ link.name }}
+              ul.list-inline.pull-right
+                li(ng-repeat='tag in link.tags'): span: a(ng-href='/#/list/{{ tag }}') \#{{ tag }}
+            .panel-body
+              a(ng-href='{{ link.url }}', ng-bind='link.url')
+
+    script(type='text/ng-template', id='tags.html')
+      .row(ng-controller='TagsCtrl', ng-init='openLink="type"')
+        .col-md-12
+          form.form-inline
+            .form-group
+              input(type='radio', ng-model='openLink', name='openLink', id='openLink1', value='type')
+              label(for='openLink1') Open link in Typeahead
+            .form-group
+              input(type='radio', ng-model='openLink', name='openLink', id='openLink2', value='list')
+              label(for='openLink2') Open link in List
+          ul.tags.list-inline
+            li.tag(ng-repeat='(key, val) in tags', ng-class='getClass(val)')
+              a(ng-href='/#/{{ openLink }}/tag:{{ key }}') \#{{key}}
+
+    script(type='text/javascript', src='vendor.min.js')
+    script(type='text/javascript', src='index.js')

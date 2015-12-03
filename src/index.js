@@ -43,9 +43,7 @@ function getEngine (links) {
   });
 }
 
-function startTypeahead (links) {
-  var input = $('#typeahead');
-
+function startTypeahead (input, links) {
   links = getEngine(links);
 
   input.typeahead({
@@ -79,8 +77,8 @@ function startTypeahead (links) {
 }
 
 angular
-.module('App', ['ngStorage', 'angular-cache'])
-.factory('Typeahead', function ($http, $rootScope, $q) {
+.module('App', ['ngRoute', 'ngStorage', 'angular-cache'])
+.factory('LinksLoader', function ($http, $q, $rootScope) {
   function getData (response) {
     var url = response.config.url;
     var data = null;
@@ -115,19 +113,34 @@ angular
     return objArray;
   }
 
+  function getLastItem (arr) {
+    return arr.slice(-1)[0];
+  }
+
   return {
     load: function () {
       var urls = $rootScope.settings.url.split('\n');
       var promises = urls.map(function (url) { return $http.get(url); });
-
-      $q
+      return $q
         .all(promises)
         .then(mapResponses)
         .then(combineObjects)
-        .then(function (arr) {
-          var allLinks = arr.slice(-1)[0];
-          startTypeahead(allLinks);
-        });
+        .then(getLastItem);
+    }
+  };
+})
+.directive('myTypeahead', function () {
+  return {
+    restrict: 'C',
+    scope: true,
+    link: function (scope, el, attrs) {
+      var input = $(el[0]);
+      scope.$root.$watch('loadedLinks', function () {
+        startTypeahead(input, scope.$root.loadedLinks);
+      });
+      scope.$watch('term', function () {
+        input.val(scope.term).trigger('input').focus();
+      });
     }
   };
 })
@@ -154,6 +167,32 @@ angular
     Settings.reset();
   };
 })
+.controller('TagsCtrl', function ($scope, $rootScope) {
+  var tags = {};
+
+  $rootScope.loadedLinks
+    .map(function (i) { return i.tags; })
+    .forEach(function (itags) {
+      itags.forEach(function (tag) {
+        tags[tag] = tags.hasOwnProperty(tag) ? tags[tag] + 1 : 1;
+      });
+    });
+
+  $scope.getClass = function (val) {
+    var cls = 1;
+    if (val > 10) cls = 10;
+    if (val > 25) cls = 25;
+    if (val > 50) cls = 50;
+    if (val > 100) cls = 100;
+    return 'tag-' + cls;
+  }
+
+  $scope.tags = tags;
+})
+.controller('TypeCtrl', function ($scope, $routeParams) {
+  var term = $routeParams.term ? $routeParams.term.replace(/tag:/gi, '#') : '';
+  $scope.term = term;
+})
 .filter('noReferrer', function () {
   return function (input) {
     return 'https://href.li/?' + input;
@@ -164,7 +203,14 @@ angular
     return 'https://www.google.com/s2/favicons?domain_url=' + input;
   };
 })
-.run(function ($http, $rootScope, Settings, Typeahead, CacheFactory) {
+.config(function ($routeProvider) {
+  $routeProvider
+    .when('/type/:term?', { templateUrl: 'typeahead.html', controller: 'TypeCtrl' })
+    .when('/list/:term?', { templateUrl: 'list.html', controller: 'TypeCtrl' })
+    .when('/tags', { templateUrl: 'tags.html' })
+    .otherwise({ redirectTo: '/type' });
+})
+.run(function ($http, $rootScope, Settings, CacheFactory, LinksLoader) {
   $rootScope.settings = Settings.storage;
 
   if ($rootScope.settings.cache === true) {
@@ -176,5 +222,7 @@ angular
     });
   }
 
-  Typeahead.load();
+  LinksLoader.load().then(function (links) {
+    $rootScope.loadedLinks = links;
+  });
 });

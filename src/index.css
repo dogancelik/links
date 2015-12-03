@@ -76,3 +76,35 @@
 #browserstack:hover {
   color: #FF5500;
 }
+
+.tag-10 {
+  font-size: 2rem;
+}
+
+.tag-25 {
+  font-size: 3rem;
+}
+
+.tag-50 {
+  font-size: 4rem;
+}
+
+.tag-100 {
+  font-size: 5rem;
+}
+
+.hashnum {
+  height: 27px;
+  width: 27px;
+  border-radius: 27px;
+  padding: 5px;
+  box-sizing: border-box;
+  background-color: #ccc;
+  font-size: 1rem;
+  margin-right: 4px;
+}
+
+.hashnum span {
+  font-weight: bold;
+  font-size: 1.1em;
+}
