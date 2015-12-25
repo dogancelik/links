@@ -1,4 +1,5 @@
 /* Typeahead */
+
 .tt-input {
   font-size: 27px;
   padding: 15px 24px;
@@ -21,7 +22,7 @@
 }
 
 .tt-suggestion {
-  padding: 15px 20px;
+  padding: 13px 20px;
   line-height: 24px;
   font-size: 24px;
   cursor: pointer;
@@ -32,28 +33,32 @@
   background-color: #0097cf;
 }
 
-.tt-suggestion .obj {
-  position: relative;
-}
+/* Typeahead custom */
 
-.tt-suggestion .name {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.tt-suggestion .url {
+.ta-obj .url {
   font-size: 12px;
 }
 
-.tt-suggestion .tags {
-  position: absolute;
-  top: 0;
-  right: 0;
+.ta-obj .tags {
+  float: right;
+}
+
+.ta-obj .type {
+  display: inline-block;
+  margin-left: 8px;
   font-size: 20px;
 }
 
+.ta-obj .fa-download {
+  color: #45aa27;
+}
+
+.ta-obj .fa-external-link-square {
+  color: #2e9fcc;
+}
+
 /* Main */
+
 @keyframes heart {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); text-shadow: 0 0 2px #FF002B; color: #FF002B; }

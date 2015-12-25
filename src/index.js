@@ -38,7 +38,7 @@ function getEngine (links) {
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     local: links,
     identify: function (obj) {
-      return obj._source + '/' + obj.tags.join('/') + '/' + obj.name;
+      return obj.name;
     }
   });
 }
@@ -58,10 +58,15 @@ function startTypeahead (input, links) {
       suggestion: function (obj) {
         tags = obj.tags.map(function (i) { return '#' + i; }).join(' ');
 
-        return '<div><div class="obj">' +
-          '<span class="name">' + obj.name + '</span>' +
-          '<br><span class="url">' + obj._url + '</span>' +
-          '<span class="tags">' + tags + '</span>' +
+        return '<div><div class="ta-obj">' +
+          '<div class="ta-row">' +
+            '<span class="name">' + obj.name + '</span>' +
+            '<span class="type"><i class="fa ' + (obj.type === 'file' ? 'fa-download' : 'fa-external-link-square') + '"></i></span>' +
+            '<span class="tags">' + tags + '</span>' +
+          '</div>' +
+          '<div class="ta-row">' +
+            '<span class="url">' + obj._url + '</span>' +
+          '</div>' +
           '</div></div>';
       }
     },
@@ -135,8 +140,8 @@ angular
     scope: true,
     link: function (scope, el, attrs) {
       var input = $(el[0]);
-      scope.$root.$watch('loadedLinks', function () {
-        startTypeahead(input, scope.$root.loadedLinks);
+      scope.$root.$watch('loadedLinks', function (nVal, oVal) {
+        nVal && startTypeahead(input, scope.$root.loadedLinks); // if nVal is not null, start Typeahead
       });
       scope.$watch('term', function () {
         input.val(scope.term).trigger('input').focus();
