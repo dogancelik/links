@@ -2,7 +2,7 @@ dependencies:
   override:
     - npm install
     - bower install
-    - gulp
+    - ./node_modules/.bin/gulp
   cache_directories:
     - "~/.cache/bower"
 
