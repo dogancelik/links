@@ -1,3 +1,8 @@
+# Set config
+
+git config --global user.name "Doğan Çelik"
+git config --global user.email dogancelik@users.noreply.github.com
+
 # Clone build repo
 
 rm -rf build
