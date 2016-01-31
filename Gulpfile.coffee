@@ -3,8 +3,8 @@ concat = require 'gulp-concat'
 jade = require 'gulp-jade'
 
 pathJade = 'src/**/*.jade'
-dirSrc = 'src/**/*.*'
-dirDist = '../links-js.github.io'
+dirSrc = 'src/**/**'
+dirDist = process.env.BUILD ? 'build'
 
 vendorJs = [
   'bower_components/jquery/dist/jquery.min.js'

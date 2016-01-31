@@ -1,0 +1,12 @@
+dependencies:
+  override:
+    - npm install
+    - bower install
+    - gulp
+  cache_directories:
+    - "~/.cache/bower"
+
+deployment:
+  branch: master
+  commands:
+    - bash publish.sh
