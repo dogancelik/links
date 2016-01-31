@@ -10,7 +10,8 @@ git clone git@github.com:links-js/links-js.github.io.git build
 
 # Build
 
-gulp
+alias bin='PATH=$(npm bin):$PATH'
+bin gulp
 
 # Prepare commit message
 
