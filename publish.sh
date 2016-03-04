@@ -1,7 +1,7 @@
 # Set config
 
-git config --global user.name "Doğan Çelik"
-git config --global user.email dogancelik@users.noreply.github.com
+git config --global user.name "CircleCI"
+git config --global user.email noreply@circleci.com
 
 # Clone build repo
 
