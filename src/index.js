@@ -97,15 +97,17 @@ angular
     return data;
   }
 
-  function mapResponses (responses) {
-    return responses.map(function(response) {
-      return getData(response);
-    });
-  }
-
   function combineObjects (objArray) {
     var allLinks = [];
-    objArray.forEach(function (obj) {
+    objArray.filter(function (obj) {
+      if (!!obj && obj instanceof Object) {
+        if (obj.hasOwnProperty('links')) {
+          return true;
+        }
+      }
+      console.error('Incorrect object:', obj);
+      return false; // discard everything else that doesn't have 'links' property
+    }).forEach(function (obj) {
       // _source for identify - base64
       var links = obj.links.map(function (link) {
         link._url = obj._url;
@@ -125,10 +127,21 @@ angular
   return {
     load: function () {
       var urls = $rootScope.settings.url.split('\n');
-      var promises = urls.map(function (url) { return $http.get(url); });
+      var promises = urls
+        .filter(function (url) {
+          return url.length > 0;
+        })
+        .map(function (url) {
+          return $http
+            .get(url)
+            .then(getData, function (err) {
+              console.error('HTTP error:', err);
+              return $q.reject(err);
+        });
+      });
+
       return $q
         .all(promises)
-        .then(mapResponses)
         .then(combineObjects)
         .then(getLastItem);
     }
