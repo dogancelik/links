@@ -126,19 +126,20 @@ angular
 
   return {
     load: function () {
-      var urls = $rootScope.settings.url.split('\n');
-      var promises = urls
+      var urls = $rootScope.settings.url.split('\n')
         .filter(function (url) {
           return url.length > 0;
-        })
+        });
+
+      var promises = urls
         .map(function (url) {
           return $http
             .get(url)
             .then(getData, function (err) {
               console.error('HTTP error:', err);
               return $q.reject(err);
+            });
         });
-      });
 
       return $q
         .all(promises)
@@ -155,6 +156,7 @@ angular
       var input = $(el[0]);
       scope.$root.$watch('loadedLinks', function (nVal, oVal) {
         nVal && startTypeahead(input, scope.$root.loadedLinks); // if nVal is not null, start Typeahead
+        input.focus();
       });
       scope.$watch('term', function () {
         input.val(scope.term).trigger('input').focus();
