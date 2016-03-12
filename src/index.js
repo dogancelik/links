@@ -43,42 +43,19 @@ function getEngine (links) {
   });
 }
 
-function startTypeahead (input, links) {
-  links = getEngine(links);
+function suggestionFn (obj) {
+  tags = obj.tags.map(function (i) { return '#' + i; }).join(' ');
 
-  input.typeahead({
-    hint: false,
-    highlight: true,
-    minLength: 1
-  }, {
-    name: 'links',
-    source: links,
-    limit: 10,
-    templates: {
-      suggestion: function (obj) {
-        tags = obj.tags.map(function (i) { return '#' + i; }).join(' ');
-
-        return '<div><div class="ta-obj">' +
-          '<div class="ta-row">' +
-            '<span class="name">' + obj.name + '</span>' +
-            '<span class="type"><i class="fa ' + (obj.type === 'file' ? 'fa-download' : 'fa-external-link-square') + '"></i></span>' +
-            '<span class="tags">' + tags + '</span>' +
-          '</div>' +
-          '<div class="ta-row">' +
-            '<span class="url">' + obj._url + '</span>' +
-          '</div>' +
-          '</div></div>';
-      }
-    },
-    display: 'name'
-  });
-
-  input.bind('typeahead:select', function(e, obj) {
-    var target = target = localStorage.getItem('ngStorage-' + (obj.type === 'page' ? 'openPage' : 'openFile'));
-    target = stripQuotes(target);
-    target = target == 'new' ? '_blank' : '_self';
-    window.open(obj.url, target);
-  });
+  return '<div><div class="ta-obj">' +
+    '<div class="ta-row">' +
+      '<span class="name">' + obj.name + '</span>' +
+      '<span class="type"><i class="fa ' + (obj.type === 'file' ? 'fa-download' : 'fa-external-link-square') + '"></i></span>' +
+      '<span class="tags">' + tags + '</span>' +
+    '</div>' +
+    '<div class="ta-row">' +
+      '<span class="url">' + obj._url + '</span>' +
+    '</div>' +
+    '</div></div>';
 }
 
 angular
@@ -154,8 +131,30 @@ angular
     scope: true,
     link: function (scope, el, attrs) {
       var input = $(el[0]);
+      var engine = null;
       scope.$root.$watch('loadedLinks', function (nVal, oVal) {
-        nVal && startTypeahead(input, scope.$root.loadedLinks); // if nVal is not null, start Typeahead
+        if (nVal != null) {
+          engine = getEngine(scope.$root.loadedLinks);
+
+          input.typeahead({
+            hint: false,
+            highlight: true,
+            minLength: 1
+          }, {
+            name: 'links',
+            source: engine,
+            limit: scope.$root.settings.limit,
+            templates: { suggestion: suggestionFn },
+            display: 'name'
+          });
+
+          input.bind('typeahead:select', function(e, obj) {
+            var target = scope.$root.settings[obj.type === 'page' ? 'openPage' : 'openFile'];
+            target = stripQuotes(target);
+            target = target == 'new' ? '_blank' : '_self';
+            window.open(obj.url, target);
+          });
+        }
         input.focus();
       });
       scope.$watch('term', function () {
@@ -174,7 +173,8 @@ angular
     url: urls,
     openFile: 'current',
     openPage: 'new',
-    cache: true
+    cache: true,
+    limit: 10
   };
 
   return {
@@ -209,13 +209,40 @@ angular
 
   $scope.tags = tags;
 })
-.controller('TypeCtrl', function ($scope, $routeParams) {
-  var term = $routeParams.term ? $routeParams.term.replace(/tag:/gi, '#') : '';
-  $scope.term = term;
+.controller('TypeCtrl', function ($scope, $routeParams, $filter) {
+  $scope.term = $filter('tagReplace')($routeParams.term);
+})
+.controller('ListCtrl', function ($scope, $routeParams, $filter) {
+  var engine = null;
+  $scope.$root.$watch('loadedLinks', function (nVal, oVal) {
+    engine = getEngine($scope.$root.loadedLinks);
+    triggerChange();
+  });
+
+  $scope.searchResults = [];
+  $scope.change = function () {
+    engine && engine.search($scope.term.trim(), function (links) {
+      $scope.searchResults = links;
+    });
+  };
+
+  function triggerChange () { if ($scope.term.length > 0) $scope.change(); }
+  $scope.term = $filter('tagReplace')($routeParams.term);
+  triggerChange();
+})
+.filter('tagReplace', function () {
+  return function (input) {
+    return input ? input.replace(/tag:/gi, '#') : '';
+  }
 })
 .filter('noReferrer', function () {
   return function (input) {
     return 'https://href.li/?' + input;
+  };
+})
+.filter('filename', function () {
+  return function (input) {
+    return input.split('/').slice(-1)[0];
   };
 })
 .filter('getFaviconUrl', function () {
@@ -226,7 +253,7 @@ angular
 .config(function ($routeProvider) {
   $routeProvider
     .when('/type/:term?', { templateUrl: 'typeahead.html', controller: 'TypeCtrl' })
-    .when('/list/:term?', { templateUrl: 'list.html', controller: 'TypeCtrl' })
+    .when('/list/:term?', { templateUrl: 'list.html', controller: 'ListCtrl' })
     .when('/tags', { templateUrl: 'tags.html' })
     .otherwise({ redirectTo: '/type' });
 })
