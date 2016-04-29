@@ -1,9 +1,9 @@
 /* Typeahead */
 
 .tt-input {
-  font-size: 27px;
-  padding: 15px 24px;
-  height: 69px;
+  font-size: 2em;
+  padding: 0.3em 0.6em;
+  height: 2.3em;
 }
 
 .twitter-typeahead {
@@ -13,8 +13,8 @@
 
 .tt-menu {
   width: 100%;
-  margin-top: 4px;
-  padding: 4px 0;
+  margin-top: .25em;
+  padding: .2em 0;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 4px;
@@ -22,31 +22,50 @@
 }
 
 .tt-suggestion {
-  padding: 13px 20px;
-  line-height: 24px;
-  font-size: 24px;
+  padding: .6em .7em;
+  line-height: .75em;
+  font-size: 1.7em;
   cursor: pointer;
 }
 
-.tt-suggestion.tt-cursor,.tt-suggestion:hover {
+.tt-suggestion.tt-cursor,
+.tt-suggestion:hover,
+.tt-suggestion:hover .url,
+.tt-suggestion:hover .type i,
+.tt-suggestion:hover .tags {
   color: #fff;
   background-color: #0097cf;
 }
 
 /* Typeahead custom */
 
+.ta-row * {
+  vertical-align: middle;
+}
+
+.ta-obj .tt-highlight {
+  vertical-align: initial;
+}
+
+.ta-row:first-child {
+  margin-bottom: .2rem;
+}
+
 .ta-obj .url {
-  font-size: 12px;
+  font-size: 1.4rem;
+  color: #666;
 }
 
 .ta-obj .tags {
+  color: #444;
   float: right;
+  font-size: .75em;
 }
 
 .ta-obj .type {
   display: inline-block;
   margin-left: 8px;
-  font-size: 20px;
+  font-size: .75em;
 }
 
 .ta-obj .fa-download {
@@ -112,4 +131,33 @@
 .hashnum span {
   font-weight: bold;
   font-size: 1.1em;
+}
+
+/* Media queries */
+@media screen and (max-width: 767px) {
+  #type-form {
+    font-size: 1rem;
+  }
+
+  .ta-obj .url { /* fix, because css3 doesn't have min() */
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  #type-form {
+    font-size: 1.1rem;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  #type-form {
+    font-size: 1.3rem;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  #type-form {
+    font-size: 1.5rem;
+  }
 }

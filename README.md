@@ -13,4 +13,4 @@ PRs are welcome, if you find a bug, please open a issue and don't forget to incl
 
 ## To-do
 
-* Responsive CSS for different screen sizes (No preprocessor until we stabilize this app)
+* Nothing

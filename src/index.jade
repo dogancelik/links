@@ -3,6 +3,8 @@ html(ng-app='App')
   head
     title Links
     meta(charset='UTF-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
     link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css', rel='stylesheet', integrity='sha256-k2/8zcNbxVIh5mnQ52A0r3a6jAgMGxFJFE2707UxGCk= sha512-ZV9KawG2Legkwp3nAlxLIVFudTauWuBpC10uEafMHYL0Sarrz5A7G79kXh5+5+woxQ5HM559XX2UZjMJ36Wplg==', crossorigin='anonymous')
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css', rel='stylesheet', integrity='sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==', crossorigin='anonymous')
     link(rel='stylesheet', type='text/css', href='index.css')
@@ -76,7 +78,7 @@ html(ng-app='App')
     script(type='text/ng-template', id='typeahead.html')
       .row
         .col-md-12
-          form
+          form#type-form
             input#typeahead.my-typeahead.form-control.input-lg(type='text', placeholder='Search for links')
 
     script(type='text/ng-template', id='list.html')
@@ -91,9 +93,9 @@ html(ng-app='App')
               span.panel-title
                 span.text-muted &#35;{{ $index+1 }}
                 | &nbsp;{{ link.name }}&nbsp;
-              ul.list-inline.pull-right
+              ul.hidden-xs.list-inline.pull-right
                 li(ng-repeat='tag in link.tags'): span: a(ng-href='/#/list/tag:{{ tag }}') &#35;{{ tag }}
-              span.text-muted.pull-right {{ link._url | filename }}&nbsp;|&nbsp;
+              span.hidden-xs.text-muted.pull-right {{ link._url | filename }}&nbsp;|&nbsp;
             .panel-body
               a(ng-href='{{ link.url }}', ng-bind='link.url')
 
