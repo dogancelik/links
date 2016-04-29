@@ -1,3 +1,11 @@
+function injectCss (css) {
+  var el = document.createElement('style');
+  el.type = 'text/css';
+  el.innerHTML = css;
+  document.head.appendChild(el);
+  return el;
+}
+
 function getOs() {
   var platform = navigator.platform.toUpperCase();
   if (platform.indexOf('MAC') > -1) return 'mac';
@@ -259,6 +267,8 @@ angular
 })
 .run(function ($http, $rootScope, Settings, CacheFactory, LinksLoader) {
   $rootScope.settings = Settings.storage;
+
+  if ($rootScope.settings.css != null) injectCss($rootScope.settings.css);
 
   if ($rootScope.settings.cache === true) {
     $http.defaults.cache = CacheFactory('defaultCache', {
