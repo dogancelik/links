@@ -1,7 +1,28 @@
 function injectCss (css) {
-  var el = document.createElement('style');
+  var type;
+
+  if (typeof css === 'string') {
+    css = css.trim();
+  } else {
+    return false;
+  }
+
+  if (css.indexOf('/') === 0 || css.indexOf('http:') === 0 || css.indexOf('https:') === 0) {
+    type = 'link';
+  } else {
+    type = 'style';
+  }
+
+  var el = document.createElement(type);
   el.type = 'text/css';
-  el.innerHTML = css;
+
+  if (type == 'link') {
+    el.rel  = 'stylesheet';
+    el.href = css;
+  } else {
+    el.innerHTML = css;
+  }
+
   document.head.appendChild(el);
   return el;
 }

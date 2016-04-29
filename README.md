@@ -11,6 +11,11 @@ PRs are welcome, if you find a bug, please open a issue and don't forget to incl
 * [Source Format](https://github.com/links-js/links/wiki/Source-Format) for the format of *links source* file
 * [links-db](https://github.com/links-js/links-db) for the database repository
 
+## Styles
+
+You can customize your page with Custom CSS in Settings panel.  
+It accepts a URL or an inline CSS.
+
 ## To-do
 
 * Nothing
