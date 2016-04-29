@@ -29,6 +29,9 @@
 }
 
 .tt-suggestion.tt-cursor,
+.tt-suggestion.tt-cursor .url,
+.tt-suggestion.tt-cursor .type i,
+.tt-suggestion.tt-cursor .tags,
 .tt-suggestion:hover,
 .tt-suggestion:hover .url,
 .tt-suggestion:hover .type i,
