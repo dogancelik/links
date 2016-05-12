@@ -211,9 +211,19 @@ angular
     storage: $localStorage.$default(storageDefault)
   };
 })
-.controller('SettingsCtrl', function ($scope, $rootScope, Settings) {
+.controller('SettingsCtrl', function ($scope, $rootScope, Settings, $http) {
+  function status() {
+    $scope.status = 'Please reload page';
+  }
+
   $scope.reset = function () {
     Settings.reset();
+    status();
+  };
+
+  $scope.clear = function () {
+    $http.defaults.cache.destroy();
+    status();
   };
 })
 .controller('TagsCtrl', function ($scope, $rootScope) {
