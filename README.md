@@ -23,4 +23,4 @@ Contribute styles [here](https://github.com/links-js/styles)
 
 ## To-do
 
-* Nothing
+* Implement results by recency
