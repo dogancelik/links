@@ -24,3 +24,4 @@ Contribute styles [here](https://github.com/links-js/styles)
 ## To-do
 
 * Implement results by recency
+* Implement filtering by tag
