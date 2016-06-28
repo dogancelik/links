@@ -1,4 +1,6 @@
 # Links
+
+[![Join the chat at https://gitter.im/dogancelik/links](https://badges.gitter.im/dogancelik/links.svg)](https://gitter.im/dogancelik/links?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Lots of download links for easy access
 
 [Sponsored by BrowserStack](http://www.browserstack.com/)
