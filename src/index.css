@@ -79,6 +79,10 @@
   color: #2e9fcc;
 }
 
+.ta-obj .fa-bookmark {
+  color: #e74c3c;
+}
+
 /* Main */
 
 @keyframes heart {

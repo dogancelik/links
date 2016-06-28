@@ -1,4 +1,5 @@
 gulp = require 'gulp'
+connect = require 'gulp-connect'
 concat = require 'gulp-concat'
 jade = require 'gulp-jade'
 
@@ -22,17 +23,22 @@ gulp.task 'main', ->
     .src pathJade
     .pipe jade(pretty: true)
     .pipe gulp.dest(dirDist)
+    .pipe(connect.reload())
 
   gulp
     .src [dirSrc, '!' + pathJade]
     .pipe gulp.dest(dirDist)
+    .pipe(connect.reload())
 
 gulp.task 'vendor', ->
   gulp
     .src(vendorJs)
     .pipe(concat('vendor.min.js'))
     .pipe(gulp.dest(dirDist))
+    .pipe(connect.reload())
 
 gulp.task 'watch', ['default'], -> gulp.watch dirSrc, ['default']
 
 gulp.task 'default', ['main', 'vendor']
+
+gulp.task 'serve', -> connect.server root: 'build', livereload: true

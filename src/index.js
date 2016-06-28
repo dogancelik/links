@@ -72,13 +72,29 @@ function getEngine (links) {
   });
 }
 
+function getTypeIcon (type) {
+  var typeClass = '';
+  switch (type) {
+    case 'file':
+      typeClass = 'fa-download';
+      break;
+    case 'bookmark':
+      typeClass = 'fa-bookmark';
+      break;
+    default:
+      typeClass = 'fa-external-link-square';
+      break;
+  }
+  return typeClass;
+}
+
 function suggestionFn (obj) {
   tags = obj.tags.map(function (i) { return '#' + i; }).join(' ');
 
   return '<div><div class="ta-obj">' +
     '<div class="ta-row">' +
       '<span class="name">' + obj.name + '</span>' +
-      '<span class="type"><i class="fa ' + (obj.type === 'file' ? 'fa-download' : 'fa-external-link-square') + '"></i></span>' +
+      '<span class="type"><i class="fa ' + getTypeIcon(obj.type) + '"></i></span>' +
       '<span class="tags">' + tags + '</span>' +
     '</div>' +
     '<div class="ta-row">' +
