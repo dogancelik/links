@@ -1,4 +1,4 @@
-# Links
+# Links [![Gitter](https://badges.gitter.im/dogancelik/links.svg)](https://gitter.im/dogancelik/links)
 Lots of download links for easy access
 
 [Sponsored by BrowserStack](http://www.browserstack.com/)

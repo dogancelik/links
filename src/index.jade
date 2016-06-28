@@ -5,8 +5,8 @@ html(ng-app='App')
     meta(charset='UTF-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css', rel='stylesheet', integrity='sha256-k2/8zcNbxVIh5mnQ52A0r3a6jAgMGxFJFE2707UxGCk= sha512-ZV9KawG2Legkwp3nAlxLIVFudTauWuBpC10uEafMHYL0Sarrz5A7G79kXh5+5+woxQ5HM559XX2UZjMJ36Wplg==', crossorigin='anonymous')
-    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css', rel='stylesheet', integrity='sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==', crossorigin='anonymous')
+    link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css', rel='stylesheet', integrity='sha256-k2/8zcNbxVIh5mnQ52A0r3a6jAgMGxFJFE2707UxGCk= sha512-ZV9KawG2Legkwp3nAlxLIVFudTauWuBpC10uEafMHYL0Sarrz5A7G79kXh5+5+woxQ5HM559XX2UZjMJ36Wplg==', crossorigin='anonymous')
+    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css', rel='stylesheet', integrity='sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==', crossorigin='anonymous')
     link(rel='stylesheet', type='text/css', href='index.css')
     script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js')
   body
@@ -36,7 +36,13 @@ html(ng-app='App')
             li: a#donate(href='http://dogancelik.com/donate.html')
               i.fa.fa-heart
               | &nbsp;Donate
-            li: a(href='https://github.com/links-js/links')
+            li: a(href='https://gitter.im/dogancelik/links')
+              i.fa.fa-comments
+              | &nbsp;
+              span Gitter
+              | &nbsp;
+              small (Chat)
+            li: a(href='https://github.com/dogancelik/links')
               i.fa.fa-github
               | &nbsp;Github
 
@@ -63,6 +69,9 @@ html(ng-app='App')
                   .form-group
                     label(for='settings-suggestions') Max suggestions
                     input#settings-suggestions.form-control(ng-model='settings.limit')
+                  .form-group.hidden
+                    label(for='settings-filter') Filter by tag
+                    input#settings-filter.form-control(ng-model='settings.filter')
                 .col-sm-6
                   .form-group
                     label Open files in
