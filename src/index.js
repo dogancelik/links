@@ -59,8 +59,9 @@ function getEngine (links) {
     datumTokenizer: function (obj) {
       var tokens = [];
       tokens = tokens
-        .concat(Bloodhound.tokenizers.whitespace(obj.name))
+        .concat(Bloodhound.tokenizers.whitespace(obj.name.replace(/[\(\)]/g, '')))
         .concat(obj.tags.map(function(i) { return '#' + i; }))
+        .concat(':' + obj.type)
         .concat(obj.url);
       return tokens;
     },
