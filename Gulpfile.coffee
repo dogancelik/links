@@ -1,11 +1,27 @@
 gulp = require 'gulp'
 connect = require 'gulp-connect'
 concat = require 'gulp-concat'
+coffee = require 'gulp-coffee'
 jade = require 'gulp-jade'
+stylus = require 'gulp-stylus'
+autoprefixer = require 'gulp-autoprefixer'
+rename = require 'gulp-rename'
+cleanCSS = require 'gulp-clean-css'
+sourcemaps = require 'gulp-sourcemaps'
+# ignore = require 'gulp-ignore'
+# rimraf = require 'gulp-rimraf'
 
 pathJade = 'src/**/*.jade'
+pathStylus = 'src/**/*.styl'
+pathCoffee = 'src/*.coffee'
 dirSrc = 'src/**/**'
 dirDist = process.env.BUILD ? 'build'
+
+appJs = [
+  'src/js/utils.coffee'
+  'src/js/typeahead.coffee'
+  'src/js/app.coffee'
+]
 
 vendorJs = [
   'bower_components/jquery/dist/jquery.min.js'
@@ -18,27 +34,53 @@ vendorJs = [
   'bower_components/js-yaml/dist/js-yaml.min.js'
 ]
 
-gulp.task 'main', ->
+gulp.task 'html', ->
   gulp
     .src pathJade
-    .pipe jade(pretty: true)
+    .pipe jade()
+    .pipe gulp.dest(dirDist)
+    .pipe connect.reload()
+
+gulp.task 'copy', ->
+  gulp
+    .src 'src/copy/**'
     .pipe gulp.dest(dirDist)
     .pipe(connect.reload())
 
+gulp.task 'rm-css', ->
   gulp
-    .src [dirSrc, '!' + pathJade]
+    .src "#{dirDist}/*.css*"
+    .pipe rimraf()
+
+gulp.task 'css', ->
+  gulp
+    .src pathStylus
+    .pipe sourcemaps.init()
+    .pipe stylus()
+    .pipe autoprefixer(browsers: ['last 5 versions'])
+    .pipe cleanCSS()
+    .pipe rename(suffix: '.min')
+    .pipe sourcemaps.write('.')
     .pipe gulp.dest(dirDist)
-    .pipe(connect.reload())
+
+gulp.task 'js', ->
+  gulp
+    .src appJs
+    .pipe sourcemaps.init()
+    .pipe coffee(bare: true)
+    .pipe concat('index.min.js')
+    .pipe sourcemaps.write('.')
+    .pipe gulp.dest(dirDist)
 
 gulp.task 'vendor', ->
   gulp
-    .src(vendorJs)
-    .pipe(concat('vendor.min.js'))
-    .pipe(gulp.dest(dirDist))
-    .pipe(connect.reload())
+    .src vendorJs
+    .pipe concat('vendor.min.js')
+    .pipe gulp.dest(dirDist)
+    .pipe connect.reload()
 
 gulp.task 'watch', ['default'], -> gulp.watch dirSrc, ['default']
 
-gulp.task 'default', ['main', 'vendor']
+gulp.task 'default', ['html', 'css', 'copy', 'js', 'vendor']
 
 gulp.task 'serve', -> connect.server root: 'build', livereload: true
