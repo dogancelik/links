@@ -1,5 +1,6 @@
 # Set config
 
+git config --global push.default simple
 git config --global user.name "CircleCI"
 git config --global user.email circleci@users.noreply.github.com
 
