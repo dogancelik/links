@@ -28,6 +28,9 @@ getOs = ->
     return 'linux'
   'windows'
 
+isYamlOrJson = (str) ->
+  /\.(ya?ml|json)$/.test str
+
 isYaml = (str) ->
   /\.(ya?ml)$/.test str
 
@@ -41,3 +44,12 @@ getTagClass = (val) ->
   cls = 50 if val > 50
   cls = 100 if val > 100
   'tag-' + cls
+
+splitThenAdd = (val, add) ->
+  val.split('\n').concat(add).join('\n')
+
+getIconForOs = (str) ->
+  return 'fa-apple' if str.includes 'mac'
+  return 'fa-windows' if str.includes 'windows'
+  return 'fa-linux' if str.includes 'linux'
+  return ''

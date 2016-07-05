@@ -1,11 +1,15 @@
 angular
   .module 'App', ['ngRoute', 'ngStorage', 'angular-cache']
 
+  .constant 'sourcesUrl', 'https://api.github.com/repos/links-js/db/contents/'
+
   .filter 'tagReplace', -> (input) -> if input then input.replace(/tag:/gi, '#') else ''
   .filter 'noReferrer', -> (input) -> 'https://href.li/?' + input
   .filter 'filename', -> (input) -> input.split('/').slice(-1)[0]
   .filter 'getFaviconUrl', -> (input) -> 'https://www.google.com/s2/favicons?domain_url=' + input
   .filter 'getLastItem', -> (arr) -> arr.slice(-1)[0]
+  .filter 'hasYamlOrJson', -> (obj) -> isYamlOrJson(obj.name)
+  .filter 'getIconForOs', -> getIconForOs
 
   .factory 'LinksLoader', ($http, $q, $rootScope, $filter) ->
     getData = (response) ->
@@ -94,9 +98,18 @@ angular
       storage: $localStorage.$default(storageDefault)
     }
 
-  .controller 'SettingsCtrl', ($scope, $rootScope, Settings, $http) ->
-    status = ->
-      $scope.status = 'Please reload page'
+  .controller 'SettingsCtrl', ($scope, $rootScope, Settings, $http, sourcesUrl, $filter) ->
+    status = -> $scope.status = 'Please reload page'
+
+    $http.get(sourcesUrl).then (res) ->
+      $scope.sources = res.data.filter $filter('hasYamlOrJson')
+
+    $scope.addSource = (source) ->
+      $rootScope.settings.url = splitThenAdd($rootScope.settings.url, "/db/#{source.path}")
+
+    $scope.style = (name) ->
+      $rootScope.settings.css = "/styles/#{name}.css"
+      status()
 
     $scope.reset = ->
       Settings.reset()
