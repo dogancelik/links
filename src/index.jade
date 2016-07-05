@@ -61,6 +61,7 @@ html(ng-app='App')
                 textarea.form-control(ng-model='settings.url')
               .form-group
                 button.btn.btn-default(ng-class="{active: settings.cache, 'btn-success': settings.cache}", ng-click='settings.cache = !settings.cache') Activate Cache
+                | &nbsp;
                 button.btn.btn-default(ng-click='clear()') Clear Cache
                 | &nbsp;
                 a.pull-right.btn.btn-default(href='https://github.com/links-js/links/wiki/Sources', target='_blank') List of sources

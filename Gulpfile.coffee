@@ -14,7 +14,7 @@ sourcemaps = require 'gulp-sourcemaps'
 pathJade = 'src/**/*.jade'
 pathStylus = 'src/**/*.styl'
 pathCoffee = 'src/*.coffee'
-dirSrc = 'src/**/**'
+dirWatch = 'src/**/**'
 dirDist = process.env.BUILD ? 'build'
 
 appJs = [
@@ -79,7 +79,7 @@ gulp.task 'vendor', ->
     .pipe gulp.dest(dirDist)
     .pipe connect.reload()
 
-gulp.task 'watch', ['default'], -> gulp.watch dirSrc, ['default']
+gulp.task 'watch', ['default'], -> gulp.watch dirWatch, ['default']
 
 gulp.task 'default', ['html', 'css', 'copy', 'js', 'vendor']
 

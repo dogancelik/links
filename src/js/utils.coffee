@@ -34,8 +34,10 @@ isYaml = (str) ->
 stripQuotes = (str) ->
   str.replace /^"(.*)"$/, '$1'
 
-setDefaults = (links) ->
-  links.map (i) ->
-    if typeof i.type == 'undefined'
-      i.type = 'page'
-    i
+getTagClass = (val) ->
+  cls = 1
+  cls = 10 if val > 10
+  cls = 25 if val > 25
+  cls = 50 if val > 50
+  cls = 100 if val > 100
+  'tag-' + cls

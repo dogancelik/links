@@ -1,16 +1,22 @@
+setDefaults = (links) ->
+  links.map (i) ->
+    i.type = 'page' if typeof i.type == 'undefined'
+    i
+
 getEngine = (links) ->
   links = setDefaults(links)
   new Bloodhound
     datumTokenizer: (obj) ->
       tokens = []
-      tokens = tokens.concat(Bloodhound.tokenizers.whitespace(obj.name.replace(/[\(\)]/g, ''))).concat(obj.tags.map((i) ->
-        '#' + i
-      )).concat(':' + obj.type).concat(obj.url)
+      tokens = tokens
+        .concat Bloodhound.tokenizers.whitespace(obj.name.replace(/[\(\)]/g, ''))
+        .concat obj.tags.map((i) -> '#' + i)
+        .concat ':' + obj.type
+        .concat obj.url
       tokens
     queryTokenizer: Bloodhound.tokenizers.whitespace
     local: links
-    identify: (obj) ->
-      obj.name
+    identify: (obj) -> obj.name
 
 getTypeIcon = (type) ->
   typeClass = ''

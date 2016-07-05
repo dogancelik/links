@@ -1,7 +1,13 @@
 angular
   .module 'App', ['ngRoute', 'ngStorage', 'angular-cache']
 
-  .factory 'LinksLoader', ($http, $q, $rootScope) ->
+  .filter 'tagReplace', -> (input) -> if input then input.replace(/tag:/gi, '#') else ''
+  .filter 'noReferrer', -> (input) -> 'https://href.li/?' + input
+  .filter 'filename', -> (input) -> input.split('/').slice(-1)[0]
+  .filter 'getFaviconUrl', -> (input) -> 'https://www.google.com/s2/favicons?domain_url=' + input
+  .filter 'getLastItem', -> (arr) -> arr.slice(-1)[0]
+
+  .factory 'LinksLoader', ($http, $q, $rootScope, $filter) ->
     getData = (response) ->
       url = response.config.url
       data = null
@@ -10,29 +16,25 @@ angular
       data._url = url
       data
 
-    combineObjects = (objArray) ->
-      allLinks = []
-      objArray.filter((obj) ->
-        if ! !obj and obj instanceof Object
-          if obj.hasOwnProperty('links')
-            return true
-        console.error 'Incorrect object:', obj
-        false
-        # discard everything else that doesn't have 'links' property
-      ).forEach (obj) ->
-        # _source for identify - base64
-        links = obj.links.map((link) ->
-          link._url = obj._url
-          link._source = window.btoa(obj._url)
-          link
-        )
-        allLinks = allLinks.concat(links)
-        return
-      objArray.push allLinks
-      objArray
+    getObjWithLinks = (obj) ->
+      if Boolean(obj) and (obj instanceof Object)
+        if obj.hasOwnProperty 'links'
+          return true
+      console.error 'Incorrect object:', obj
+      return false
 
-    getLastItem = (arr) ->
-      arr.slice(-1)[0]
+    reduceAllObj = (prevArr, curObj) ->
+      # _source for identify - base64
+      links = curObj.links.map (link) ->
+        link._url = curObj._url
+        link._source = window.btoa(curObj._url)
+        link
+      prevArr.concat(links)
+
+    combineObjects = (objArray) ->
+      # discard everything else that doesn't have 'links' property then combine all files
+      objArray.push objArray.filter(getObjWithLinks).reduce(reduceAllObj, [])
+      objArray
 
     {
       load: ->
@@ -41,7 +43,7 @@ angular
           $http.get(url).then getData, (err) ->
             console.error 'HTTP error:', err
             $q.reject err
-        $q.all(promises).then(combineObjects).then getLastItem
+        $q.all(promises).then(combineObjects).then $filter('getLastItem')
     }
 
   .directive 'myTypeahead', ->
@@ -49,21 +51,22 @@ angular
       restrict: 'C'
       scope: true
       link: (scope, el, attrs) ->
+        options =
+          hint: false
+          highlight: true
+          minLength: 1
+        dataset =
+          name: 'links'
+          source: null
+          limit: scope.$root.settings.limit
+          templates: suggestion: suggestionFn
+          display: 'name'
         input = $(el[0])
         engine = null
         scope.$root.$watch 'loadedLinks', (nVal, oVal) ->
           if nVal != null
-            engine = getEngine(scope.$root.loadedLinks)
-            input.typeahead {
-              hint: false
-              highlight: true
-              minLength: 1
-            },
-              name: 'links'
-              source: engine
-              limit: scope.$root.settings.limit
-              templates: suggestion: suggestionFn
-              display: 'name'
+            dataset.source = getEngine(scope.$root.loadedLinks)
+            input.typeahead options, dataset
             input.bind 'typeahead:select', (e, obj) ->
               target = scope.$root.settings[if obj.type == 'page' then 'openPage' else 'openFile']
               target = stripQuotes(target)
@@ -78,15 +81,16 @@ angular
       '/db/db-global.yml'
       '/db/db-' + getOs() + '.yml'
     ].join('\n')
+
     storageDefault =
       url: urls
       openFile: 'current'
       openPage: 'new'
       cache: true
       limit: 10
+
     {
-      reset: ->
-        $localStorage.$reset storageDefault
+      reset: -> $localStorage.$reset storageDefault
       storage: $localStorage.$default(storageDefault)
     }
 
@@ -110,18 +114,7 @@ angular
         itags.forEach (tag) ->
           tags[tag] = if tags.hasOwnProperty(tag) then tags[tag] + 1 else 1
 
-    $scope.getClass = (val) ->
-      cls = 1
-      if val > 10
-        cls = 10
-      if val > 25
-        cls = 25
-      if val > 50
-        cls = 50
-      if val > 100
-        cls = 100
-      'tag-' + cls
-
+    $scope.getClass = getTagClass
     $scope.tags = tags
 
   .controller 'TypeCtrl', ($scope, $routeParams, $filter) ->
@@ -143,11 +136,6 @@ angular
     $scope.term = $filter('tagReplace')($routeParams.term)
     triggerChange()
 
-  .filter 'tagReplace', -> (input) -> if input then input.replace(/tag:/gi, '#') else ''
-  .filter 'noReferrer', -> (input) -> 'https://href.li/?' + input
-  .filter 'filename', -> (input) -> input.split('/').slice(-1)[0]
-  .filter 'getFaviconUrl', -> (input) -> 'https://www.google.com/s2/favicons?domain_url=' + input
-
   .config ($routeProvider) ->
     $routeProvider
       .when '/type/:term?', templateUrl: 'typeahead.html', controller: 'TypeCtrl'
@@ -167,4 +155,6 @@ angular
         deleteOnExpire: 'aggressive'
         storageMode: 'localStorage'
 
-    LinksLoader.load().then (links) -> $rootScope.loadedLinks = links
+    LinksLoader.load().then (links) ->
+      console.log 'Links are loaded:', links.length
+      $rootScope.loadedLinks = links
