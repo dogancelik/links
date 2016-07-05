@@ -8,6 +8,8 @@ autoprefixer = require 'gulp-autoprefixer'
 rename = require 'gulp-rename'
 cleanCSS = require 'gulp-clean-css'
 sourcemaps = require 'gulp-sourcemaps'
+uglify = require 'gulp-uglify'
+ngAnnotate = require 'gulp-ng-annotate'
 # ignore = require 'gulp-ignore'
 # rimraf = require 'gulp-rimraf'
 
@@ -39,13 +41,11 @@ gulp.task 'html', ->
     .src pathJade
     .pipe jade()
     .pipe gulp.dest(dirDist)
-    .pipe connect.reload()
 
 gulp.task 'copy', ->
   gulp
     .src 'src/copy/**'
     .pipe gulp.dest(dirDist)
-    .pipe(connect.reload())
 
 gulp.task 'rm-css', ->
   gulp
@@ -68,16 +68,18 @@ gulp.task 'js', ->
     .src appJs
     .pipe sourcemaps.init()
     .pipe coffee(bare: true)
+    .pipe ngAnnotate()
+    .pipe uglify()
     .pipe concat('index.min.js')
     .pipe sourcemaps.write('.')
     .pipe gulp.dest(dirDist)
+    .pipe connect.reload()
 
 gulp.task 'vendor', ->
   gulp
     .src vendorJs
     .pipe concat('vendor.min.js')
     .pipe gulp.dest(dirDist)
-    .pipe connect.reload()
 
 gulp.task 'watch', ['default'], -> gulp.watch dirWatch, ['default']
 
