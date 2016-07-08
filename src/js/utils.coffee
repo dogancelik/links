@@ -1,15 +1,22 @@
 injectCss = (css) ->
+  elId = 'inject-css'
   type = undefined
   if typeof css == 'string'
     css = css.trim()
   else
     return false
+
   if css.indexOf('/') == 0 or css.indexOf('http:') == 0 or css.indexOf('https:') == 0
     type = 'link'
   else
     type = 'style'
-  el = document.createElement(type)
+
+  el = document.getElementById(elId) ? document.createElement(type)
+  el.href = '' if el.hasAttribute('href') and css == '' # for resetting style
+
   el.type = 'text/css'
+  el.id = elId
+
   if type == 'link'
     el.rel = 'stylesheet'
     el.href = css

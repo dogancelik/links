@@ -87,7 +87,7 @@ html(ng-app='App')
                 #tab-sources.tab-pane
                   .form-group
                     label Source URLs
-                    textarea.form-control(ng-model='settings.url', rows="10")
+                    textarea.form-control(ng-model='settings.url', rows='10')
                   .form-group
                     ul.list-inline
                       li: button.btn.btn-default(ng-class="{active: settings.cache, 'btn-success': settings.cache}", ng-click='settings.cache = !settings.cache') Activate Cache
@@ -105,7 +105,7 @@ html(ng-app='App')
                 #tab-style.tab-pane
                   .form-group
                     label Custom CSS (inline) or CSS URL
-                    textarea.form-control(ng-model='settings.css', rows="10")
+                    textarea.form-control(ng-model='settings.css', rows='10', ng-change='applyStyle()', ng-model-options='{ debounce: 500 }')
                   .form-group
                     ul.list-inline
                       li: a.btn.btn-default(ng-click="style('ubuntu')") Ubuntu Style

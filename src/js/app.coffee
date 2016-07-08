@@ -107,9 +107,11 @@ angular
     $scope.addSource = (source) ->
       $rootScope.settings.url = splitThenAdd($rootScope.settings.url, "/db/#{source.path}")
 
+    $scope.applyStyle = -> injectCss $rootScope.settings.css; return
+
     $scope.style = (name) ->
       $rootScope.settings.css = "/styles/#{name}.css"
-      status()
+      $scope.applyStyle()
 
     $scope.reset = ->
       Settings.reset()
