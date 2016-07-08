@@ -11,8 +11,9 @@ injectCss = (css) ->
   else
     type = 'style'
 
-  el = document.getElementById(elId) ? document.createElement(type)
-  el.href = '' if el.hasAttribute('href') and css == '' # for resetting style
+  el = document.getElementById(elId)
+  el.parentNode.removeChild el if el?
+  el = document.createElement type
 
   el.type = 'text/css'
   el.id = elId
