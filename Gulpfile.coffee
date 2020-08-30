@@ -2,13 +2,13 @@ gulp = require 'gulp'
 connect = require 'gulp-connect'
 concat = require 'gulp-concat'
 coffee = require 'gulp-coffee'
-jade = require 'gulp-jade'
+jade = require 'gulp-pug'
 stylus = require 'gulp-stylus'
 autoprefixer = require 'gulp-autoprefixer'
 rename = require 'gulp-rename'
 cleanCSS = require 'gulp-clean-css'
 sourcemaps = require 'gulp-sourcemaps'
-uglify = require 'gulp-uglify'
+uglify = require 'gulp-uglify-es'
 ngAnnotate = require 'gulp-ng-annotate'
 # ignore = require 'gulp-ignore'
 # rimraf = require 'gulp-rimraf'
@@ -36,53 +36,66 @@ vendorJs = [
   'bower_components/js-yaml/dist/js-yaml.min.js'
 ]
 
-gulp.task 'html', ->
+html = ->
   gulp
     .src pathJade
     .pipe jade()
     .pipe gulp.dest(dirDist)
 
-gulp.task 'copy', ->
+copy = ->
   gulp
     .src 'src/copy/**'
     .pipe gulp.dest(dirDist)
 
-gulp.task 'rm-css', ->
+rm_css = ->
   gulp
     .src "#{dirDist}/*.css*"
     .pipe rimraf()
 
-gulp.task 'css', ->
+css = ->
   gulp
     .src pathStylus
     .pipe sourcemaps.init()
     .pipe stylus()
-    .pipe autoprefixer(browsers: ['last 5 versions'])
+    .pipe autoprefixer()
+    .pipe gulp.dest(dirDist)
     .pipe cleanCSS()
     .pipe rename(suffix: '.min')
     .pipe sourcemaps.write('.')
     .pipe gulp.dest(dirDist)
 
-gulp.task 'js', ->
+js = ->
   gulp
     .src appJs
     .pipe sourcemaps.init()
     .pipe coffee(bare: true)
     .pipe ngAnnotate()
-    .pipe uglify()
+    .pipe concat('index.js')
+    .pipe gulp.dest(dirDist)
+    .pipe uglify.default()
     .pipe concat('index.min.js')
     .pipe sourcemaps.write('.')
     .pipe gulp.dest(dirDist)
     .pipe connect.reload()
 
-gulp.task 'vendor', ->
+vendor_min = ->
   gulp
     .src vendorJs
     .pipe concat('vendor.min.js')
     .pipe gulp.dest(dirDist)
 
-gulp.task 'watch', ['default'], -> gulp.watch dirWatch, ['default']
+vendor = ->
+  gulp
+    .src vendorJs.map((i) -> i.replace('.min', ''))
+    .pipe concat('vendor.js')
+    .pipe gulp.dest(dirDist)
 
-gulp.task 'default', ['html', 'css', 'copy', 'js', 'vendor']
+exports.default = gulp.series(html, css, copy, js, vendor, vendor_min)
 
-gulp.task 'serve', -> connect.server root: 'build', livereload: true
+watch = ->
+  gulp.watch dirWatch, exports.default
+
+serve = ->
+  connect.server root: 'build', livereload: true
+
+exports.watch = gulp.parallel(watch, serve)

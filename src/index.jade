@@ -5,10 +5,9 @@ html(ng-app='App')
     meta(charset='UTF-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css', rel='stylesheet', integrity='sha256-k2/8zcNbxVIh5mnQ52A0r3a6jAgMGxFJFE2707UxGCk= sha512-ZV9KawG2Legkwp3nAlxLIVFudTauWuBpC10uEafMHYL0Sarrz5A7G79kXh5+5+woxQ5HM559XX2UZjMJ36Wplg==', crossorigin='anonymous')
-    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css', rel='stylesheet', integrity='sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==', crossorigin='anonymous')
+    link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN", crossorigin="anonymous")
+    link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css", integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu", crossorigin="anonymous")
     link(rel='stylesheet', type='text/css', href='index.min.css')
-    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js')
   body
     .container
       nav.navbar.navbar-default
@@ -22,9 +21,9 @@ html(ng-app='App')
             | &nbsp;Links
         #navbar-collapse.collapse.navbar-collapse
           ul.nav.navbar-nav
-            li: a(href='/#/') Home
-            li: a(href='/#/list') List
-            li: a(href='/#/tags') Tags
+            li: a(href='/#!/') Home
+            li: a(href='/#!/list') List
+            li: a(href='/#!/tags') Tags
           form.navbar-form.navbar-left(role='search')
             button.btn.btn-default(type='button', data-toggle='modal', data-target='#settingsModal')
               i.fa.fa-cogs
@@ -139,7 +138,7 @@ html(ng-app='App')
                 span.text-muted &#35;{{ $index+1 }}
                 | &nbsp;{{ link.name }}&nbsp;
               ul.hidden-xs.list-inline.pull-right
-                li(ng-repeat='tag in link.tags'): span: a(ng-href='/#/list/tag:{{ tag }}') &#35;{{ tag }}
+                li(ng-repeat='tag in link.tags'): span: a(ng-href='/#!/list/tag:{{ tag }}') &#35;{{ tag }}
               span.hidden-xs.text-muted.pull-right {{ link._url | filename }}&nbsp;|&nbsp;
             .panel-body
               a(ng-href='{{ link.url }}', ng-bind='link.url')
@@ -150,13 +149,14 @@ html(ng-app='App')
           form.form-inline
             .form-group
               input(type='radio', ng-model='openLink', name='openLink', id='openLink1', value='type')
-              label(for='openLink1') Open link in Typeahead
+              label(for='openLink1') &nbsp;Open link in Typeahead
+            | &nbsp;
             .form-group
               input(type='radio', ng-model='openLink', name='openLink', id='openLink2', value='list')
-              label(for='openLink2') Open link in List
+              label(for='openLink2') &nbsp;Open link in List
           ul.tags.list-inline
             li.tag(ng-repeat='(key, val) in tags', ng-class='getClass(val)')
-              a(ng-href='/#/{{ openLink }}/tag:{{ key }}') \#{{key}}
+              a(ng-href='/#!/{{ openLink }}/tag:{{ key }}') \#{{key}}
 
     script(type='text/javascript', src='vendor.min.js')
     script(type='text/javascript', src='index.min.js')

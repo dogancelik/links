@@ -14,13 +14,14 @@
     "tests"
   ],
   "dependencies": {
-    "angular-cache": "~4.4.2",
-    "bootstrap": "~3.3.5",
+    "angular": "1.8.0",
+    "angular-cache": "4.6.0",
+    "angular-route": "1.8.0",
+    "bootstrap": "3.4.1",
+    "font-awesome": "~4.4.0",
     "js-yaml": "~3.4.3",
     "ngstorage": "~0.3.10",
     "typeahead.js": "~0.11.1",
-    "angular": "~1.4.8",
-    "font-awesome": "~4.4.0",
-    "angular-route": "~1.4.8"
+    "jquery": "^3.5.1"
   }
 }

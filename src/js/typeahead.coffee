@@ -40,4 +40,3 @@ suggestionFn = (obj) ->
     </div>
   </div></div>
   """
-

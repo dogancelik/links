@@ -68,7 +68,7 @@ angular
         input = $(el[0])
         engine = null
         scope.$root.$watch 'loadedLinks', (nVal, oVal) ->
-          if nVal != null
+          if nVal
             dataset.source = getEngine(scope.$root.loadedLinks)
             input.typeahead options, dataset
             input.bind 'typeahead:select', (e, obj) ->
