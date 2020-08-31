@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - name: Install dependencies
+      run: |
+        npx bower install
+        npm ci
+    - name: Checkout build repo
+      uses: actions/checkout@v2
+      with:
+        repository: 'links-js/links-js.github.io'
+        token: ${{ secrets.ACCESS_TOKEN }}
+        path: build
+    - name: Build
+      run: npm run build
+    - name: Deploy
+      run: |
+        COMMIT_HEADER="Github Actions Build #$GITHUB_RUN_NUMBER"
+        COMMIT_MSG="$(git log --format=%B -1)"
+        cd build
+        git config user.name github-actions[bot]
+        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+        git add -A
+        git commit -m "$COMMIT_HEADER" -m "$COMMIT_MSG"
+        git push

@@ -6,7 +6,7 @@
     "defaults"
   ],
   "scripts": {
-    "default": "gulp default",
+    "build": "gulp default",
     "watch": "gulp watch"
   },
   "devDependencies": {
